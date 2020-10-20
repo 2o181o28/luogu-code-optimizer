@@ -2,22 +2,22 @@
 
 使用base64编码和[无文件ELF执行](https://blog.spoock.com/2019/08/27/elf-in-memory-execution/)绕过洛谷对于文件访问的限制，完成的C++的Babel.js类似品。
 
-## 构建
-
-```bash
-g++ optimizer.cpp -o optimizer -std=c++11 -O2 
-```
-
 ## 使用方法
 
-`input.cpp`是你想要优化，或者需要奇怪编译选项的代码。自带的例子是我紫荆花之恋的代码，这个程序不开`-Ofast`不可能在洛谷上获得AC。
-
 ```bash
-g++ input.cpp -o input -Ofast -march=native -std=c++20 # 或者任意其它你喜欢的开关
-strip input
-./optimizer
+./optimize.sh input.cpp output.cpp # 将input.cpp优化为output.cpp
+./optimize.sh input.cpp # 优化input.cpp并覆盖input.cpp，将引发警告
+./optimize.sh input output.cpp # 将任意的可执行文件input转化为output.cpp
 ```
 
-然后使用最普通的C++98、不开O2编译`output.cpp`，也可得到与你用任意你喜欢的编译开关编译`input.cpp`一样的结果。此`output.cpp`可用于洛谷提交等。例子：[使用output.cpp AC的紫荆花之恋 洛谷提交](https://www.luogu.com.cn/record/40135048)。
+此`output.cpp`可用于洛谷提交等。例子：[使用output.cpp AC的紫荆花之恋 洛谷提交](https://www.luogu.com.cn/record/40135048)。
+
+脚本返回值`0`代表执行成功；`1`代表文件操作失败了；`2`代表编译错误。
+
+比如说你想要提交一个开了最高编译优化，使用C++20标准，Clang++编译器，链接pthread库的代码`1.cpp`（显然洛谷不支持这些功能），将其变成可以使用C++98标准，古董g++编译器，不带任何编译开关编译的代码`2.cpp`：
+```bash
+clang++ 1.cpp -o 1 -Ofast -march=native -std=c++20 -lpthread && strip 1
+./optimize.sh 1 2.cpp
+```
 
 不保证可以在非Ubuntu 20.04的操作系统上正常运行。

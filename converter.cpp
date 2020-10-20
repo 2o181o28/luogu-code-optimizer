@@ -22,14 +22,17 @@ int to_base64(const char *c,char *o,int l){
 
 char buf[1<<20],obuf[1<<20];
 
-int main(){
+int main(int argc,char **argv){
+	assert(argc==3);
 	init_tb();
-	freopen("input","r",stdin);
+	freopen(argv[1],"r",stdin);
 
 	int l=fread(buf,1,1<<20,stdin);
 	to_base64(buf,obuf,l);
-	freopen("template.cpp","r",stdin);
-	freopen("output.cpp","w",stdout);
+	string s(argv[0]);
+	while(s.size()&&s.back()!='/')s.pop_back();
+	freopen((s+"template.cpp").c_str(),"r",stdin);
+	freopen(argv[2],"w",stdout);
 	for(int i=0;i<7;i++){
 		fgets(buf,1<<10,stdin);
 		fputs(buf,stdout);
