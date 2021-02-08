@@ -1,6 +1,6 @@
 # luogu-code-optimizer
 
-使用base64编码和[无文件ELF执行](https://blog.spoock.com/2019/08/27/elf-in-memory-execution/)绕过洛谷对于文件访问的限制，完成的C++的Babel.js类似品。
+使用base64编码和[无文件ELF执行](https://blog.spoock.com/2019/08/27/elf-in-memory-execution/)绕过洛谷对于文件访问的限制，完成的C++的Babel.js类似品。更多细节详见[我的博客](https://2o181o28.github.io/2020/10/20/%E6%97%A0%E6%96%87%E4%BB%B6ELF%E6%89%A7%E8%A1%8C%E4%BB%A5%E5%8F%8A%E6%B4%9B%E8%B0%B7%E6%89%8B%E5%8A%A8O2/)。
 
 ## 使用方法
 
@@ -10,7 +10,7 @@
 ./optimize.sh input output.cpp # 将任意的可执行文件input转化为output.cpp
 ```
 
-此`output.cpp`可用于洛谷提交等。例子：[使用output.cpp AC的紫荆花之恋 洛谷提交](https://www.luogu.com.cn/record/40135048)。
+此`output.cpp`可用于洛谷提交等。例子：[使用output.cpp AC的紫荆花之恋 洛谷提交](https://www.luogu.com.cn/record/46375489)。
 
 脚本返回值`0`代表执行成功；`1`代表文件操作失败了；`2`代表编译错误。
 

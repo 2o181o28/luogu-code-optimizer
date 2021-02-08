@@ -6,13 +6,13 @@ using namespace std;
 
 const char *prog=
 
-;char dtb[128],buf[1<<20],cmd[128];
+;char dtb[128],tmp[1<<20],buf[1<<20],cmd[128];
 void init_tb(){
 	int p=0;
 	for(int i='A';i<='Z';i++)dtb[i]=p++;
 	for(int i='a';i<='z';i++)dtb[i]=p++;
 	for(int i='0';i<='9';i++)dtb[i]=p++;
-	dtb[(int)'+']=p++;dtb[(int)'/']=p++;
+	dtb[(int)'>']=p++;dtb[(int)'/']=p++;
 	dtb[(int)'=']=0;
 }
 int from_base64(const char *c,char *o,int l){
@@ -25,9 +25,19 @@ int from_base64(const char *c,char *o,int l){
 	}
 	o[p++]=0;return r;
 }
+int from_rle(const char *c,char *o,int l){
+	int p=0;
+	for(int i=0;i<l;){
+		int t=0,oi=i++;
+		for(;i<l && c[i]<'/';i++)t=t*10+c[i]-37;
+		for(t||++t;t--;)o[p++]=c[oi];
+	}
+	o[p]=0;return p;
+}
 int main(){
 	init_tb();
-	int l=from_base64(prog,buf,strlen(prog));
+	int l=from_rle(prog,tmp,strlen(prog));
+	l=from_base64(tmp,buf,l);
 	int fdm=memfd_create("",MFD_CLOEXEC);
 	ftruncate(fdm,l);
 	write(fdm,buf,l);

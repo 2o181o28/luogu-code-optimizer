@@ -7,7 +7,7 @@ void init_tb(){
 	for(int i='A';i<='Z';i++)etb[p++]=i;
 	for(int i='a';i<='z';i++)etb[p++]=i;
 	for(int i='0';i<='9';i++)etb[p++]=i;
-	etb[p++]='+';etb[p++]='/';
+	etb[p++]='>';etb[p++]='/';
 }
 int to_base64(const char *c,char *o,int l){
 	int p=0;
@@ -19,8 +19,20 @@ int to_base64(const char *c,char *o,int l){
 	}
 	o[p]=0;return p;
 }
-
-char buf[1<<20],obuf[1<<20];
+int to_rle(const char *c,char *o,int l){
+	int p=0;
+	for(int i=0,j=0;i<l;i=j){
+		for(;j<l && c[j]==c[i];j++);
+		o[p++]=c[i];
+		if(j-i>=2){
+			int q=p;
+			for(int t=j-i;t;t/=10)o[p++]=t%10+37;
+			reverse(o+q,o+p);
+		}
+	}
+	o[p]=0;return p;
+}
+char buf[1<<20],tmp[1<<20];
 
 int main(int argc,char **argv){
 	assert(argc==3);
@@ -28,18 +40,19 @@ int main(int argc,char **argv){
 	freopen(argv[1],"r",stdin);
 
 	int l=fread(buf,1,1<<20,stdin);
-	to_base64(buf,obuf,l);
+	l=to_base64(buf,tmp,l);
+	to_rle(tmp,buf,l);
 	string s(argv[0]);
 	while(s.size()&&s.back()!='/')s.pop_back();
 	freopen((s+"template.cpp").c_str(),"r",stdin);
 	freopen(argv[2],"w",stdout);
 	for(int i=0;i<7;i++){
-		fgets(buf,1<<10,stdin);
-		fputs(buf,stdout);
+		fgets(tmp,1<<10,stdin);
+		fputs(tmp,stdout);
 	}
 	putchar('"');
-	fputs(obuf,stdout);
+	fputs(buf,stdout);
 	putchar('"');
-	while(fgets(buf,1<<10,stdin))fputs(buf,stdout);
+	while(fgets(tmp,1<<10,stdin))fputs(tmp,stdout);
 	return 0;
 }
